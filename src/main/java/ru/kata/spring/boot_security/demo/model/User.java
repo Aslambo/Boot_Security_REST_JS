@@ -3,15 +3,7 @@ package ru.kata.spring.boot_security.demo.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GenerationType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,8 +15,8 @@ public class User implements UserDetails {
     private Long id;
     @Column
     private String name;
-    @Column
-    private String surname;
+    @Column(name = "surname")
+    private String lastName;
 
     @Column
     private byte age;
@@ -43,9 +35,9 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String surname, Byte age, String email, String password, List<Role> roles) {
+    public User(String name, String lastName, Byte age, String email, String password, List<Role> roles) {
         this.name = name;
-        this.surname = surname;
+        this.lastName = lastName;
         this.age = age;
         this.email = email;
         this.password = password;
@@ -76,12 +68,12 @@ public class User implements UserDetails {
         this.name = name;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -118,15 +110,6 @@ public class User implements UserDetails {
         return getRoles();
     }
 
-    public boolean hasRole(String roleName) {
-        if (roles.stream()
-                .map(Role::getName)
-                .anyMatch(r -> r.equals(roleName))) {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public String getPassword() {
         return password;
@@ -155,17 +138,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
     }
 }

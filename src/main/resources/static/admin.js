@@ -1,7 +1,6 @@
 const url = 'http://localhost:8180/api/admin/'
 const dbRoles = [{id: 1, name: "ROLE_ADMIN"}, {id: 2, name: "ROLE_USER"}]
 
-//Admin page
 fetch('api/user/')
     .then(response => response.json())
     .catch(error => console.log(error))
@@ -15,11 +14,10 @@ const showUsers = (users) => {
         <tr>
             <td>${user.id}</td>
             <td>${user.name}</td>
-            <td>${user.surname}</td>
+            <td>${user.lastName}</td>
             <td>${user.age}</td>
             <td>${user.email}</td>
             <td>${user.roles.map(role => role.name)}</td>
-            
             <td class="text text-white">
                 <a class="btnEdit btn btn-info">Edit</a>
             </td>
@@ -45,7 +43,6 @@ const reloadShowUsers = () => {
         })
 }
 
-//User-info page
 let userInfo = ''
 const showUser = (user) => {
     const container = document.getElementById("tbody-user-info")
@@ -53,7 +50,7 @@ const showUser = (user) => {
         <tr>
             <td>${user.id}</td>
             <td>${user.name}</td>
-            <td>${user.surname}</td>
+            <td>${user.lastName}</td>
             <td>${user.age}</td>
             <td>${user.email}</td>
             <td>${user.roles.map(role => role.name)}</td>
@@ -65,10 +62,11 @@ fetch('api/user/')
     .then(data => showUser(data))
     .catch(error => console.log(error))
 
+
 //Create user
 const formNew = document.getElementById('formNewUser')
 const name = document.getElementById('name')
-const lastname = document.getElementById('lastname')
+const lastname = document.getElementById('lastName')
 const age = document.getElementById('age')
 const email = document.getElementById('email')
 const password = document.getElementById('password')
@@ -84,8 +82,9 @@ btnNewUser.addEventListener('click', () => {
     email.value = ''
     password.value = ''
     roles.innerHTML = `
-        <option>User</option>
-        <option>User</option>`
+        <option>USER</option>
+        <option>ADMIN</option>
+        `
     option = 'userPage'
 })
 
@@ -93,16 +92,16 @@ formNew.addEventListener('submit', (e) => {
     e.preventDefault()
     let listRoles = roleArray(document.getElementById('userRole'))
     console.log(
-        name.value, lastname.value, age.value, email.value, listRoles
+        name.value, lastname.value, age.value, email.value, password.value, listRoles
     )
-    fetch('api/admin/', {
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
             name: name.value,
-            surname: lastname.value,
+            lastName: lastname.value,
             age: age.value,
             email: email.value,
             password: password.value,
@@ -110,11 +109,12 @@ formNew.addEventListener('submit', (e) => {
         })
     })
         .then(formNew.reset())
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => showUsers(data))
         .catch(error => console.log(error))
         .then(reloadShowUsers)
-    $('nav-tabs a[href="nav-admin"]').tab('show')
+    $('.nav-tabs a[href="#nav-admin"]').tab('show')
+
 })
 
 // Edit modal
@@ -150,7 +150,7 @@ on(document, 'click', '.btnEdit', e => {
     const getUserById = (user) => {
         idEdit.value = user.id
         nameEdit.value = user.name
-        lastnameEdit.value = user.surname
+        lastnameEdit.value = user.lastName
         ageEdit.value = user.age
         emailEdit.value = user.email
         passwordEdit.value = ''
@@ -255,3 +255,38 @@ let roleArray = (options) => {
     }
     return array
 }
+/*
+
+CREATE TABLE users (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(20) DEFAULT NULL,
+    surname varchar(20) DEFAULT NULL,
+    age int DEFAULT NULL,
+    email varchar(25) DEFAULT NULL,
+    password varchar(100) DEFAULT NULL,
+    roles varchar(15) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `roles` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `name` varchar(15) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `users_roles` (
+    `user_id` int NOT NULL,
+    `role_id` int NOT NULL,
+    PRIMARY KEY (`user_id`,`role_id`),
+    KEY `role_id` (`role_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
+);
+insert into roles (name)
+value('ROLE_ADMIN');
+
+insert into roles (name)
+value('ROLE_USER');
+
+insert into users (name, surname, age, email, password, roles)
+values ('Aslambek', 'Sosaev', 20, 'Nagibator228@mail.ru', '$2a$12$CVHsaVdFcigvQsox55/hzOLgcvD9HEoM5etvGdiJriVwFcozk7Usa', 'ROLE_ADMIN'); */

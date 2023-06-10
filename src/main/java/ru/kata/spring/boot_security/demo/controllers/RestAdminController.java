@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/admin")
 public class RestAdminController {
     private UserService userService;
@@ -24,19 +25,19 @@ public class RestAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id) {
+    public ResponseEntity<User> getById(@PathVariable long id) {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> saveUser(@RequestBody User user) {
+    public ResponseEntity<HttpStatus> newUser(@RequestBody User user) {
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@RequestBody User user) {
+    @PutMapping()
+    public ResponseEntity<HttpStatus> editUser(@RequestBody User user) {
         userService.updateUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }

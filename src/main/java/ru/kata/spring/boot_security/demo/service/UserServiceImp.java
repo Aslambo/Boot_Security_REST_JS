@@ -11,7 +11,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserDao;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,24 +47,12 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional
     public void saveUser(User user) {
-        List<Role> listRoles = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            int id = Integer.parseInt(role.getName());
-            listRoles.add(roleService.getRoleById(id));
-        }
-        user.setRoles(listRoles);
         userDao.saveUser(user);
     }
 
     @Override
     @Transactional
     public void updateUser(User updateUser) {
-        List<Role> listRoles = new ArrayList<>();
-        for (Role role : updateUser.getRoles()) {
-            int id = Integer.parseInt(role.getName());
-            listRoles.add(roleService.getRoleById(id));
-        }
-        updateUser.setRoles(listRoles);
         userDao.updateUser(updateUser);
     }
 

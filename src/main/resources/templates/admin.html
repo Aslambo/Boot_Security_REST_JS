@@ -23,7 +23,8 @@
                       th:utext="${user.email}">admin</span>
                                 <span class="navbar-brand">with roles:</span>
                                 <span class="navbar-brand" style="margin-left: -10px"
-                                      th:text="${user.getRolesInString()}">role</span>
+                                      th:each="role : ${user.roles}"
+                                      th:text="${role.name.replaceFirst('ROLE_', ' ')}">role</span>
                             </div>
                         </div>
                     </div>
@@ -117,9 +118,9 @@
                                                 <input type="text" class="form-control mb-3"
                                                        id="name" placeholder="First name">
 
-                                                <label for="lastname" class="fw-bold">Last name</label>
+                                                <label for="lastName" class="fw-bold">Last name</label>
                                                 <input type="text" class="form-control mb-3"
-                                                       id="lastname" placeholder="Last name"/>
+                                                       id="lastName" placeholder="Last name"/>
 
                                                 <label for="age" class="fw-bold">Age</label>
                                                 <input type="number" class="form-control mb-3"
@@ -202,7 +203,7 @@
                                type="number" disabled>
 
                         <label for="nameEdit" class="form-label fw-bold">First
-                               name</label>
+                            name</label>
                         <input id="nameEdit" class="form-control"
                                type="text" placeholder="Name" required>
 
